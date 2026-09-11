@@ -213,13 +213,20 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 🧪 Running Unit Tests
+## 🧪 Running Automated Tests
 
-Run Vitest unit tests covering URL validation, custom alias rules, cryptographic short code generation, and rate limiting:
+Run Vitest test suites covering URL validation, custom alias rules, cryptographic short code generation, rate limiting, Section 16 multi-tenant authorization (User A vs User B isolation), and Section 34 end-to-end integration flows:
 
 ```bash
 npm run test
 ```
+
+Test suites include:
+- `tests/validation.test.ts` (11 tests: protocols, malformed URLs, alias rules, reserved keywords, future expiration)
+- `tests/short-code.test.ts` (3 tests: length, unambiguous charset, uniqueness)
+- `tests/rate-limit.test.ts` (2 tests: sliding-window limits, 429 response)
+- `tests/authorization.test.ts` (6 tests: User B denied view/edit/delete/analytics of User A's links, unauthenticated denied 401, owner permitted 200)
+- `tests/integration.test.ts` (5 tests: create -> 307 redirect -> click telemetry atomic transaction, duplicate alias rejection, expired link -> /expired, disabled link -> /inactive, 404 missing link)
 
 ---
 

@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
     let customAlias: string | null = null;
 
     if (rawCustomAlias && typeof rawCustomAlias === "string" && rawCustomAlias.trim().length > 0) {
-      const alias = rawCustomAlias.trim();
+      const alias = rawCustomAlias.trim().toLowerCase();
       const aliasValidation = isValidCustomAlias(alias);
       if (!aliasValidation.valid) {
         return NextResponse.json(
@@ -85,10 +85,13 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // Check if alias already exists
+      // Check if alias already exists (case-insensitive)
       const existing = await prisma.url.findFirst({
         where: {
-          OR: [{ shortCode: alias }, { customAlias: alias }],
+          OR: [
+            { shortCode: { equals: alias, mode: "insensitive" } },
+            { customAlias: { equals: alias, mode: "insensitive" } },
+          ],
         },
       });
 

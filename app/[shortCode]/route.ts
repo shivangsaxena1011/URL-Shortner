@@ -25,10 +25,13 @@ export async function GET(req: NextRequest, context: RouteContext) {
   }
 
   try {
-    // Look up by shortCode or customAlias
+    // Look up by shortCode or customAlias (case-insensitive for vanity aliases)
     const urlRecord = await prisma.url.findFirst({
       where: {
-        OR: [{ shortCode }, { customAlias: shortCode }],
+        OR: [
+          { shortCode: { equals: shortCode, mode: "insensitive" } },
+          { customAlias: { equals: shortCode, mode: "insensitive" } },
+        ],
       },
     });
 

@@ -18,8 +18,6 @@ model User {
   updatedAt    DateTime  @updatedAt
 
   urls         Url[]
-
-  @@index([email])
 }
 
 model Url {
@@ -37,8 +35,6 @@ model Url {
 
   clicks      Click[]
 
-  @@index([shortCode])
-  @@index([customAlias])
   @@index([userId])
   @@index([createdAt])
   @@index([expiresAt])
