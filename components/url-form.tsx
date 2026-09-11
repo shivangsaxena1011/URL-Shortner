@@ -202,7 +202,7 @@ export function UrlForm({ onSuccess, compact = false }: UrlFormProps) {
                   type="text"
                   value={customAlias}
                   onChange={(e) => setCustomAlias(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, ""))}
-                  placeholder="e.g. github"
+                  placeholder="e.g. portfolio"
                   className="w-full bg-transparent text-xs text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
                   maxLength={30}
                 />

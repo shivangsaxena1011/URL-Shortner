@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Link2, Github } from "lucide-react";
+import { Link2 } from "lucide-react";
 
 export function Footer() {
   return (
@@ -17,15 +17,6 @@ export function Footer() {
           <Link href="/" className="hover:text-foreground transition-colors">
             Home
           </Link>
-          <a
-            href="https://github.com/shivangsaxena1011/URL-Shortner"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors"
-          >
-            <Github className="w-3.5 h-3.5" />
-            GitHub Repository
-          </a>
         </div>
       </div>
     </footer>

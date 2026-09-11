@@ -54,7 +54,7 @@ export default function HomePage() {
               </div>
               <h3 className="text-sm font-bold text-foreground">Custom Aliases & QR</h3>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Create vanity links like <code className="font-mono text-[11px]">/github</code> and download high-res QR codes.
+                Create vanity links like <code className="font-mono text-[11px]">/portfolio</code> and download high-res QR codes.
               </p>
             </div>
           </div>

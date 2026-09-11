@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Link2, Github } from "lucide-react";
+import { Link2 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export function Navbar() {
@@ -19,18 +19,9 @@ export function Navbar() {
           <span className="tracking-tight font-black">URL Shortener</span>
         </Link>
 
-        {/* Right Actions: Theme Toggle + GitHub */}
+        {/* Right Actions: Theme Toggle */}
         <div className="flex items-center gap-3">
           <ThemeToggle />
-          <a
-            href="https://github.com/shivangsaxena1011/URL-Shortner"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-xs font-semibold text-foreground hover:bg-muted transition-colors"
-          >
-            <Github className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">GitHub</span>
-          </a>
         </div>
       </div>
     </header>
