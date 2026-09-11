@@ -15,8 +15,13 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    const userId = (session?.user as { id?: string })?.id;
+    let userId: string | undefined;
+    try {
+      const session = await getServerSession(authOptions);
+      userId = (session?.user as { id?: string })?.id;
+    } catch {
+      userId = undefined;
+    }
 
     // Rate limiting: 10/min for anonymous, 60/min for authenticated
     const ip = getClientIp(req);
@@ -172,14 +177,14 @@ export async function POST(req: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error shortening URL:", error);
     return NextResponse.json(
       {
         success: false,
         error: {
           code: "INTERNAL_ERROR",
-          message: "An unexpected error occurred while shortening the URL.",
+          message: error?.message || "An unexpected error occurred while shortening the URL.",
         },
       },
       { status: 500 }
