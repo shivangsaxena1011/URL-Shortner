@@ -14,9 +14,14 @@ interface RouteContext {
 export async function GET(req: NextRequest, context: RouteContext) {
   const { shortCode } = context.params;
 
-  // If the shortCode is a reserved route or static file, let Next.js handle it
-  if (RESERVED_ALIASES.has(shortCode.toLowerCase()) || shortCode.includes(".")) {
-    return NextResponse.next();
+  // If the shortCode is a static file (e.g. favicon.ico) return 404
+  if (shortCode.includes(".")) {
+    return new NextResponse(null, { status: 404 });
+  }
+
+  // If the shortCode is a reserved route, redirect to not-found
+  if (RESERVED_ALIASES.has(shortCode.toLowerCase())) {
+    return NextResponse.redirect(new URL("/not-found", req.url), 307);
   }
 
   try {
@@ -27,23 +32,28 @@ export async function GET(req: NextRequest, context: RouteContext) {
       },
     });
 
-    const host = req.headers.get("host") || "localhost:3000";
-    const proto = req.headers.get("x-forwarded-proto") || "http";
-    const baseUrl = `${proto}://${host}`;
-
     // 1. Check if URL exists
     if (!urlRecord) {
-      return NextResponse.redirect(`${baseUrl}/not-found?code=${encodeURIComponent(shortCode)}`, 307);
+      return NextResponse.redirect(
+        new URL(`/not-found?code=${encodeURIComponent(shortCode)}`, req.url),
+        307
+      );
     }
 
     // 2. Check if URL is active
     if (!urlRecord.isActive) {
-      return NextResponse.redirect(`${baseUrl}/inactive?code=${encodeURIComponent(shortCode)}`, 307);
+      return NextResponse.redirect(
+        new URL(`/inactive?code=${encodeURIComponent(shortCode)}`, req.url),
+        307
+      );
     }
 
     // 3. Check expiration
     if (urlRecord.expiresAt && new Date(urlRecord.expiresAt) <= new Date()) {
-      return NextResponse.redirect(`${baseUrl}/expired?code=${encodeURIComponent(shortCode)}`, 307);
+      return NextResponse.redirect(
+        new URL(`/expired?code=${encodeURIComponent(shortCode)}`, req.url),
+        307
+      );
     }
 
     // 4. Parse click analytics
@@ -79,8 +89,6 @@ export async function GET(req: NextRequest, context: RouteContext) {
     return NextResponse.redirect(urlRecord.originalUrl, 307);
   } catch (error) {
     console.error("Error in redirect route:", error);
-    const host = req.headers.get("host") || "localhost:3000";
-    const proto = req.headers.get("x-forwarded-proto") || "http";
-    return NextResponse.redirect(`${proto}://${host}/not-found`, 307);
+    return NextResponse.redirect(new URL("/not-found", req.url), 307);
   }
 }

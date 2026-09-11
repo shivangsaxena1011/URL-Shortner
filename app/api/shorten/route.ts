@@ -146,12 +146,13 @@ export async function POST(req: NextRequest) {
     const host = req.headers.get("host");
     const proto = req.headers.get("x-forwarded-proto") || "http";
     const appUrl = host ? `${proto}://${host}` : getBaseUrl();
-    const shortUrl = `${appUrl}/${createdUrl.shortCode}`;
+    const activeCode = createdUrl.customAlias || createdUrl.shortCode;
+    const shortUrl = `${appUrl}/${activeCode}`;
 
     return NextResponse.json(
       {
         success: true,
-        shortCode: createdUrl.shortCode,
+        shortCode: activeCode,
         shortUrl,
         originalUrl: createdUrl.originalUrl,
         data: {
