@@ -21,10 +21,6 @@ const { mockPrisma, mockDb } = vi.hoisted(() => {
   return { mockPrisma, mockDb };
 });
 
-vi.mock("next-auth/next", () => ({
-  getServerSession: vi.fn().mockResolvedValue(null),
-}));
-
 vi.mock("@/lib/db", () => ({
   default: mockPrisma,
   prisma: mockPrisma,

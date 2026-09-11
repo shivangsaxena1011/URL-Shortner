@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/db";
 import {
   isValidHttpUrl,
@@ -15,22 +13,9 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
-    let userId: string | undefined;
-    try {
-      const session = await getServerSession(authOptions);
-      userId = (session?.user as { id?: string })?.id;
-    } catch {
-      userId = undefined;
-    }
-
-    // Rate limiting: 10/min for anonymous, 60/min for authenticated
+    // Rate limiting: 30 requests / minute per IP
     const ip = getClientIp(req);
-    const rateLimitIdentifier = userId ? `user:${userId}` : `ip:${ip}`;
-    const rateConfig = userId
-      ? { limit: 60, windowSeconds: 60 }
-      : { limit: 10, windowSeconds: 60 };
-
-    const rateCheck = await checkRateLimit(rateLimitIdentifier, rateConfig);
+    const rateCheck = await checkRateLimit(`ip:${ip}`, { limit: 30, windowSeconds: 60 });
     if (!rateCheck.success) {
       return NextResponse.json(
         {
@@ -145,7 +130,7 @@ export async function POST(req: NextRequest) {
         originalUrl,
         shortCode,
         customAlias,
-        userId: userId || null,
+        userId: null,
         expiresAt,
         isActive: true,
       },

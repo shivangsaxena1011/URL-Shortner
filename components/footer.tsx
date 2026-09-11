@@ -17,9 +17,6 @@ export function Footer() {
           <Link href="/" className="hover:text-foreground transition-colors">
             Home
           </Link>
-          <Link href="/dashboard" className="hover:text-foreground transition-colors">
-            Dashboard
-          </Link>
           <a
             href="https://github.com/shivangsaxena1011/URL-Shortner"
             target="_blank"
